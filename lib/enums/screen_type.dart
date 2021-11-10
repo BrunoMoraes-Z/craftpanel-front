@@ -1,0 +1,5 @@
+enum ScreenType {
+  DETAIL_SERVER,
+  LIST_SERVERS,
+  SERVER_CONFIG,
+}
