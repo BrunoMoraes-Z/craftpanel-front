@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Onix Panel',
+      title: 'CraftPanel',
       theme: ThemeData(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,

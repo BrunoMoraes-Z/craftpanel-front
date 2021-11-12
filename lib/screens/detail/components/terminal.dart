@@ -3,12 +3,22 @@ import 'dart:async';
 import 'package:craft_panel/components/elevated.dart';
 import 'package:craft_panel/constants.dart';
 import 'package:craft_panel/main.dart';
-import 'package:craft_panel/stores/server_store.dart';
+import 'package:craft_panel/screens/detail/detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_storage/get_storage.dart';
 
-final server = ServerStore(GetStorage().read('view'));
+var controller = ScrollController();
+
+void _scroll() {
+  if (GetStorage().read('auto_scroll') == null) {
+    controller.animateTo(
+      controller.position.maxScrollExtent,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.ease,
+    );
+  }
+}
 
 class Terminal extends StatefulWidget {
   @override
@@ -17,15 +27,21 @@ class Terminal extends StatefulWidget {
 
 class _TerminalState extends State<Terminal> {
   Timer timer = Timer.periodic(Duration(seconds: 5), (timer) async {
-    await api.getServerLog(server.game.serverId);
+    if (server != null) await api.getServerLog(server!.game.serverId);
+    if (GetStorage().read('server') == null) timer.cancel();
+    _scroll();
   });
 
   @override
   void initState() {
     super.initState();
+    if (server != null)
+      api.getServerLog(server!.game.serverId).then((value) => print(''));
     if (!timer.isActive) {
       timer = Timer.periodic(Duration(seconds: 5), (timer) async {
-        await api.getServerLog(server.game.serverId);
+        if (server != null) await api.getServerLog(server!.game.serverId);
+        if (GetStorage().read('server') == null) timer.cancel();
+        _scroll();
       });
     }
   }
@@ -51,10 +67,11 @@ class _TerminalState extends State<Terminal> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: SingleChildScrollView(
+            controller: controller,
             child: Observer(
               builder: (_) {
                 return SelectableText(
-                  server.log.join('\n'),
+                  server != null ? server!.log.join('\n') : '',
                   cursorColor: backgroundColor,
                   style: TextStyle(
                     color: textColor,

@@ -23,6 +23,7 @@ class ListScreen extends StatefulWidget {
 class _ListScreenState extends State<ListScreen> {
   late Timer timer = Timer.periodic(Duration(seconds: 10), (timer) async {
     await api.listServers();
+    if (GetStorage().read('server') == null) timer.cancel();
   });
 
   @override
@@ -34,6 +35,7 @@ class _ListScreenState extends State<ListScreen> {
     if (!timer.isActive) {
       Timer.periodic(Duration(seconds: 10), (timer) async {
         await api.listServers();
+        if (GetStorage().read('server') == null) timer.cancel();
       });
     }
   }

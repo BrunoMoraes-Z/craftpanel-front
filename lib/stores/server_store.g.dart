@@ -22,6 +22,13 @@ mixin _$ServerStore on _ServerStoreBase, Store {
   Server get game => (_$gameComputed ??=
           Computed<Server>(() => super.game, name: '_ServerStoreBase.game'))
       .value;
+  Computed<bool>? _$isOnlineComputed;
+
+  @override
+  bool get isOnline =>
+      (_$isOnlineComputed ??= Computed<bool>(() => super.isOnline,
+              name: '_ServerStoreBase.isOnline'))
+          .value;
 
   final _$logInfoAtom = Atom(name: '_ServerStoreBase.logInfo');
 
@@ -83,6 +90,28 @@ mixin _$ServerStore on _ServerStoreBase, Store {
   }
 
   @override
+  void clearLog() {
+    final _$actionInfo = _$_ServerStoreBaseActionController.startAction(
+        name: '_ServerStoreBase.clearLog');
+    try {
+      return super.clearLog();
+    } finally {
+      _$_ServerStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void switchOnline() {
+    final _$actionInfo = _$_ServerStoreBaseActionController.startAction(
+        name: '_ServerStoreBase.switchOnline');
+    try {
+      return super.switchOnline();
+    } finally {
+      _$_ServerStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setServerId(String id) {
     final _$actionInfo = _$_ServerStoreBaseActionController.startAction(
         name: '_ServerStoreBase.setServerId');
@@ -111,7 +140,8 @@ logInfo: ${logInfo},
 serverId: ${serverId},
 gameServer: ${gameServer},
 log: ${log},
-game: ${game}
+game: ${game},
+isOnline: ${isOnline}
     ''';
   }
 }

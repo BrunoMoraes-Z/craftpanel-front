@@ -1,11 +1,17 @@
+import 'package:craft_panel/components/my_checkbox.dart';
 import 'package:craft_panel/constants.dart';
 import 'package:craft_panel/enums/detail_type.dart';
+import 'package:craft_panel/main.dart';
 import 'package:craft_panel/screens/detail/components/detail_action_item.dart';
 import 'package:craft_panel/screens/detail/components/terminal_button.dart';
+import 'package:craft_panel/stores/server_store.dart';
 import 'package:craft_panel/stores/stores.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_storage/get_storage.dart';
+
+ServerStore? server;
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({
@@ -20,6 +26,12 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    server = ServerStore(GetStorage().read('view'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,19 +81,40 @@ class _DetailScreenState extends State<DetailScreen> {
                 return detailStore.seleted == DetailType.TERMINAL
                     ? Row(
                         children: [
-                          TerminalButton(
-                            label: 'Iniciar',
-                            icon: FontAwesomeIcons.play,
-                            onClick: () {},
+                          MyCheckbox(
+                            label: 'Auto Scroll',
+                            id: 'auto_scroll',
                           ),
-                          SizedBox(width: 8),
-                          TerminalButton(
-                            label: 'Matar',
-                            icon: FontAwesomeIcons.skull,
-                            onClick: () {},
-                            enabled: false,
-                            color: Colors.red,
-                          ),
+                          SizedBox(width: 24),
+                          Observer(builder: (_) {
+                            return TerminalButton(
+                              label: server != null && server!.isOnline
+                                  ? 'Desligar'
+                                  : 'Iniciar',
+                              icon: FontAwesomeIcons.play,
+                              color: server != null && server!.isOnline
+                                  ? Colors.redAccent
+                                  : Colors.greenAccent,
+                              onClick: () async {
+                                if (server != null) {
+                                  if (server!.isOnline) {
+                                    await api.stopServer(server!.game.serverId);
+                                  } else {
+                                    await api
+                                        .startServer(server!.game.serverId);
+                                  }
+                                }
+                              },
+                            );
+                          }),
+                          // SizedBox(width: 8),
+                          // TerminalButton(
+                          //   label: 'Matar',
+                          //   icon: FontAwesomeIcons.skull,
+                          //   enabled: server.isOnline,
+                          //   color: Colors.red,
+                          //   onClick: () {},
+                          // ),
                         ],
                       )
                     : Container();

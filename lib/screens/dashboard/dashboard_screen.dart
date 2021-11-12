@@ -37,8 +37,8 @@ class DashboardScreen extends StatelessWidget {
                     Observer(builder: (_) {
                       return Text(
                         dashStore.serverName.value.length > 0
-                            ? 'OnixPanel » ${dashStore.name}'
-                            : 'OnixPanel',
+                            ? 'CraftPanel » ${dashStore.name}'
+                            : 'CraftPanel',
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w700,

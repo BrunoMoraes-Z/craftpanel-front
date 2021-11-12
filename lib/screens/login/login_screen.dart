@@ -5,6 +5,7 @@ import 'package:craft_panel/constants.dart';
 import 'package:craft_panel/main.dart';
 import 'package:craft_panel/screens/dashboard/dashboard_screen.dart';
 import 'package:craft_panel/stores/stores.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -41,7 +42,6 @@ class LoginScreen extends StatelessWidget {
                   (v) {
                     loginStore.setServer(v);
                   },
-                  text: 'http://192.168.1.107:3000',
                   length: 40,
                 ),
                 SizedBox(height: 10),
@@ -50,7 +50,6 @@ class LoginScreen extends StatelessWidget {
                   (v) {
                     loginStore.setUsername(v);
                   },
-                  text: 'admin',
                   length: 20,
                 ),
                 SizedBox(height: 10),
@@ -59,7 +58,6 @@ class LoginScreen extends StatelessWidget {
                   (v) {
                     loginStore.setPassword(v);
                   },
-                  text: 'admin',
                   length: 40,
                   obscure: true,
                 ),

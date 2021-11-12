@@ -1,3 +1,4 @@
+import 'package:craft_panel/main.dart';
 import 'package:craft_panel/models/server.dart';
 import 'package:craft_panel/stores/stores.dart';
 import 'package:mobx/mobx.dart';
@@ -11,6 +12,7 @@ abstract class _ServerStoreBase with Store {
     _setGame(listServersStore.listServers
         .where((element) => element.serverId == id)
         .first);
+    // switchLoaded();
   }
 
   @observable
@@ -34,6 +36,20 @@ abstract class _ServerStoreBase with Store {
     }
   }
 
+  @action
+  void clearLog() {
+    logInfo.clear();
+  }
+
+  @action
+  void switchOnline() {
+    gameServer.value!.isOnline = !gameServer.value!.isOnline;
+
+    if (isOnline) {
+      api.getServerLog(serverId.value);
+    }
+  }
+
   @observable
   var serverId = Observable('');
 
@@ -47,6 +63,9 @@ abstract class _ServerStoreBase with Store {
 
   @computed
   Server get game => gameServer.value!;
+
+  @computed
+  bool get isOnline => gameServer.value!.isOnline;
 
   @action
   void _setGame(Server svs) {

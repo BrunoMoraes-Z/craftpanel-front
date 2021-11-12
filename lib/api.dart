@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:craft_panel/screens/detail/components/terminal.dart';
-import 'package:craft_panel/stores/server_store.dart';
+import 'package:craft_panel/screens/detail/detail_screen.dart';
 import 'package:craft_panel/stores/stores.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +12,7 @@ class Api {
     required String username,
     required String password,
   }) async {
+    if (server.endsWith('/')) server = server.substring(0, server.length - 1);
     await GetStorage().write('server', server);
     await GetStorage().save();
 
@@ -82,10 +82,52 @@ class Api {
 
       var body = json.decode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && server != null) {
         List.of(body['logs']).forEach((element) {
-          server.addLog(element);
+          server!.addLog(element);
         });
+      } else {
+        if (response.statusCode == 404 && server != null) {
+          server!.clearLog();
+        }
+      }
+    } catch (e) {
+      await GetStorage()
+          .write('list', 'Ouve algum erro ao tentar listar os servidores.');
+    }
+  }
+
+  Future<void> startServer(String serverId) async {
+    Map<String, String> head = {
+      'Authorization': GetStorage().read('token'),
+    };
+    try {
+      var response = await http.post(
+        Uri.parse('${GetStorage().read("server")}/action/$serverId'),
+        headers: head,
+      );
+
+      if (response.statusCode == 200 && server != null) {
+        server!.switchOnline();
+      }
+    } catch (e) {
+      await GetStorage()
+          .write('list', 'Ouve algum erro ao tentar listar os servidores.');
+    }
+  }
+
+  Future<void> stopServer(String serverId) async {
+    Map<String, String> head = {
+      'Authorization': GetStorage().read('token'),
+    };
+    try {
+      var response = await http.delete(
+        Uri.parse('${GetStorage().read("server")}/action/$serverId'),
+        headers: head,
+      );
+
+      if (response.statusCode == 200 && server != null) {
+        server!.switchOnline();
       }
     } catch (e) {
       await GetStorage()
@@ -99,15 +141,15 @@ class Api {
     };
     try {
       var response = await http.get(
-        Uri.parse('${GetStorage().read("server")}/action/$serverId/log'),
+        Uri.parse('${GetStorage().read("server")}/server/$serverId'),
         headers: head,
       );
 
       var body = json.decode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && server != null) {
         List.of(body['logs']).forEach((element) {
-          server.addLog(element);
+          server!.addLog(element);
         });
       }
     } catch (e) {
