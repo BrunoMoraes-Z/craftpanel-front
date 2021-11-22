@@ -1,6 +1,7 @@
 import 'package:craft_panel/main.dart';
 import 'package:craft_panel/models/server.dart';
 import 'package:craft_panel/stores/stores.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mobx/mobx.dart';
 part 'server_store.g.dart';
 
@@ -12,7 +13,9 @@ abstract class _ServerStoreBase with Store {
     _setGame(listServersStore.listServers
         .where((element) => element.serverId == id)
         .first);
-    // switchLoaded();
+    if (!GetStorage().read('view_status')) {
+      swtichStatus();
+    }
   }
 
   @observable
@@ -20,14 +23,6 @@ abstract class _ServerStoreBase with Store {
 
   @computed
   ObservableList<String> get log => logInfo;
-
-  // @action
-  // void changeLog(List<String> info) {
-  //   logInfo.clear();
-  //   info.forEach((element) {
-  //     addLog(element);
-  //   });
-  // }
 
   @action
   void addLog(info) {

@@ -30,9 +30,6 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     server = ServerStore(GetStorage().read('view'));
-    if (server!.isOnline) {
-      server!.swtichStatus();
-    }
   }
 
   @override
