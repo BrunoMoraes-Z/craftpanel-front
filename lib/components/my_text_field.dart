@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 
 class MyTextField extends StatefulWidget {
   MyTextField(
-    this.hint,
-    this.onChange, {
+    this.hint, {
+    this.onChange = null,
+    this.onSubmit = null,
     this.text = '',
     this.obscure = false,
+    this.clearOnSubmit = false,
     this.width = 250,
     this.height = 35,
     this.length = 20,
@@ -42,15 +44,16 @@ class MyTextField extends StatefulWidget {
     }
   }
 
-  final bool obscure;
+  final bool obscure, clearOnSubmit;
   final double height, width;
   late Decoration? decoration;
   late TextStyle? style;
   final int length;
   final TextInputAction action;
-  final String hint, text;
+  late String hint, text;
   final TextAlign textAlign;
-  late Function(String) onChange;
+  late Function(String)? onChange;
+  late Function(String)? onSubmit;
   late Color? messageColor, backColor, cursorColor;
 
   @override
@@ -72,7 +75,6 @@ class _MyTextFieldState extends State<MyTextField> {
         ),
         obscureText: widget.obscure,
         style: widget.style,
-        onChanged: widget.onChange,
         textAlign: widget.textAlign,
         autocorrect: false,
         cursorColor: widget.cursorColor,
@@ -80,6 +82,17 @@ class _MyTextFieldState extends State<MyTextField> {
         maxLength: widget.length,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
+        onChanged: widget.onChange,
+        onSubmitted: widget.onSubmit != null
+            ? (v) {
+                if (widget.clearOnSubmit) {
+                  setState(() {
+                    widget.text = '';
+                  });
+                }
+                widget.onSubmit!(v);
+              }
+            : (v) {},
         decoration: InputDecoration(
           suffixIcon: null,
           hintText: widget.hint,

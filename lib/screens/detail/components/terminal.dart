@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:craft_panel/components/elevated.dart';
+import 'package:craft_panel/components/my_text_field.dart';
 import 'package:craft_panel/constants.dart';
 import 'package:craft_panel/main.dart';
 import 'package:craft_panel/screens/detail/detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -57,28 +59,63 @@ class _TerminalState extends State<Terminal> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Elevated(
-        borderRadius: BorderRadius.circular(15),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+          color: inactiveColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-          decoration: BoxDecoration(
-            color: inactiveColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: SingleChildScrollView(
-            controller: controller,
-            child: Observer(
-              builder: (_) {
-                return SelectableText(
-                  server != null ? server!.log.join('\n') : '',
-                  cursorColor: backgroundColor,
-                  style: TextStyle(
-                    color: textColor,
+          child: Column(
+            children: [
+              Container(
+                height: 35,
+                width: double.infinity,
+                child: Elevated(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    child: MyTextField(
+                      'Comando',
+                      onSubmit: (v) async {
+                        if (v.trim().isNotEmpty) {
+                          await api.sendCommand(server!.game.serverId, v);
+                          await api.getServerLog(server!.game.serverId);
+                          _scroll();
+                        }
+                      },
+                      action: TextInputAction.send,
+                      clearOnSubmit: true,
+                      textAlign: TextAlign.left,
+                      length: 1000,
+                      backColor: backgroundColor,
+                      cursorColor: textColor,
+                    ),
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+              Flexible(
+                child: Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: SingleChildScrollView(
+                    controller: controller,
+                    child: Observer(
+                      builder: (_) {
+                        return SelectableText(
+                          server != null ? server!.log.join('\n') : '',
+                          cursorColor: backgroundColor,
+                          style: TextStyle(
+                            color: textColor,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

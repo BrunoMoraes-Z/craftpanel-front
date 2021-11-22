@@ -72,7 +72,7 @@ class ConfigurationField extends StatelessWidget {
         SizedBox(height: 8),
         MyTextField(
           '',
-          onChange,
+          onChange: onChange,
           textAlign: TextAlign.left,
         ),
         SizedBox(height: 24),

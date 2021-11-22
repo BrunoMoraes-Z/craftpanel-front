@@ -88,16 +88,16 @@ class _DetailScreenState extends State<DetailScreen> {
                           SizedBox(width: 24),
                           Observer(builder: (_) {
                             return TerminalButton(
-                              label: server != null && server!.isOnline
+                              label: server != null && server!.online.value
                                   ? 'Desligar'
                                   : 'Iniciar',
                               icon: FontAwesomeIcons.play,
-                              color: server != null && server!.isOnline
+                              color: server != null && server!.online.value
                                   ? Colors.redAccent
                                   : Colors.greenAccent,
                               onClick: () async {
                                 if (server != null) {
-                                  if (server!.isOnline) {
+                                  if (server!.online.value) {
                                     await api.stopServer(server!.game.serverId);
                                   } else {
                                     await api
@@ -107,14 +107,18 @@ class _DetailScreenState extends State<DetailScreen> {
                               },
                             );
                           }),
-                          // SizedBox(width: 8),
-                          // TerminalButton(
-                          //   label: 'Matar',
-                          //   icon: FontAwesomeIcons.skull,
-                          //   enabled: server.isOnline,
-                          //   color: Colors.red,
-                          //   onClick: () {},
-                          // ),
+                          SizedBox(width: 8),
+                          Observer(builder: (_) {
+                            return TerminalButton(
+                              label: 'Matar',
+                              icon: FontAwesomeIcons.skull,
+                              enabled: server!.online.value,
+                              color: Colors.red,
+                              onClick: () async {
+                                await api.killServer(server!.game.serverId);
+                              },
+                            );
+                          }),
                         ],
                       )
                     : Container();

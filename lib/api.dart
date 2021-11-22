@@ -108,7 +108,8 @@ class Api {
       );
 
       if (response.statusCode == 200 && server != null) {
-        server!.switchOnline();
+        await getServerLog(serverId);
+        server!.swtichStatus();
       }
     } catch (e) {
       await GetStorage()
@@ -127,7 +128,8 @@ class Api {
       );
 
       if (response.statusCode == 200 && server != null) {
-        server!.switchOnline();
+        await getServerLog(serverId);
+        server!.swtichStatus();
       }
     } catch (e) {
       await GetStorage()
@@ -156,5 +158,35 @@ class Api {
       await GetStorage()
           .write('list', 'Ouve algum erro ao tentar listar os servidores.');
     }
+  }
+
+  Future<void> killServer(String serverId) async {
+    Map<String, String> head = {
+      'Authorization': GetStorage().read('token'),
+    };
+
+    var response = await http.post(
+      Uri.parse('${GetStorage().read("server")}/action/$serverId/kill'),
+      headers: head,
+    );
+
+    if (response.statusCode == 200 && server != null) {
+      server!.swtichStatus();
+    }
+  }
+
+  Future<void> sendCommand(String serverId, String command) async {
+    Map<String, String> head = {
+      'Authorization': GetStorage().read('token'),
+    };
+    var rbody = {
+      'command': command,
+    };
+
+    await http.post(
+      Uri.parse('${GetStorage().read("server")}/action/$serverId/run'),
+      headers: head,
+      body: json.encode(rbody),
+    );
   }
 }

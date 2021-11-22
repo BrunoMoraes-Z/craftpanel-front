@@ -39,7 +39,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 40),
                 MyTextField(
                   'Servidor',
-                  (v) {
+                  onChange: (v) {
                     loginStore.setServer(v);
                   },
                   length: 40,
@@ -47,7 +47,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 10),
                 MyTextField(
                   'Usuário',
-                  (v) {
+                  onChange: (v) {
                     loginStore.setUsername(v);
                   },
                   length: 20,
@@ -55,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 10),
                 MyTextField(
                   'Senha',
-                  (v) {
+                  onChange: (v) {
                     loginStore.setPassword(v);
                   },
                   length: 40,

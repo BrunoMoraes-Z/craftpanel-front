@@ -75,6 +75,21 @@ mixin _$ServerStore on _ServerStoreBase, Store {
     });
   }
 
+  final _$onlineAtom = Atom(name: '_ServerStoreBase.online');
+
+  @override
+  Observable<bool> get online {
+    _$onlineAtom.reportRead();
+    return super.online;
+  }
+
+  @override
+  set online(Observable<bool> value) {
+    _$onlineAtom.reportWrite(value, super.online, () {
+      super.online = value;
+    });
+  }
+
   final _$_ServerStoreBaseActionController =
       ActionController(name: '_ServerStoreBase');
 
@@ -123,6 +138,17 @@ mixin _$ServerStore on _ServerStoreBase, Store {
   }
 
   @override
+  void swtichStatus() {
+    final _$actionInfo = _$_ServerStoreBaseActionController.startAction(
+        name: '_ServerStoreBase.swtichStatus');
+    try {
+      return super.swtichStatus();
+    } finally {
+      _$_ServerStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void _setGame(Server svs) {
     final _$actionInfo = _$_ServerStoreBaseActionController.startAction(
         name: '_ServerStoreBase._setGame');
@@ -139,6 +165,7 @@ mixin _$ServerStore on _ServerStoreBase, Store {
 logInfo: ${logInfo},
 serverId: ${serverId},
 gameServer: ${gameServer},
+online: ${online},
 log: ${log},
 game: ${game},
 isOnline: ${isOnline}

@@ -64,6 +64,12 @@ abstract class _ServerStoreBase with Store {
   @computed
   Server get game => gameServer.value!;
 
+  @observable
+  var online = Observable<bool>(false);
+
+  @action
+  void swtichStatus() => online.value = !online.value;
+
   @computed
   bool get isOnline => gameServer.value!.isOnline;
 
