@@ -41,15 +41,6 @@ abstract class _ServerStoreBase with Store {
     logInfo.clear();
   }
 
-  @action
-  void switchOnline() {
-    gameServer.value!.isOnline = !gameServer.value!.isOnline;
-
-    if (isOnline) {
-      api.getServerLog(serverId.value);
-    }
-  }
-
   @observable
   var serverId = Observable('');
 
@@ -71,7 +62,7 @@ abstract class _ServerStoreBase with Store {
   void swtichStatus() => online.value = !online.value;
 
   @computed
-  bool get isOnline => gameServer.value!.isOnline;
+  bool get isOnline => online.value;
 
   @action
   void _setGame(Server svs) {

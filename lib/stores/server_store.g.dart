@@ -116,17 +116,6 @@ mixin _$ServerStore on _ServerStoreBase, Store {
   }
 
   @override
-  void switchOnline() {
-    final _$actionInfo = _$_ServerStoreBaseActionController.startAction(
-        name: '_ServerStoreBase.switchOnline');
-    try {
-      return super.switchOnline();
-    } finally {
-      _$_ServerStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void setServerId(String id) {
     final _$actionInfo = _$_ServerStoreBaseActionController.startAction(
         name: '_ServerStoreBase.setServerId');

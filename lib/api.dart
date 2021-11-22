@@ -83,6 +83,9 @@ class Api {
       var body = json.decode(response.body);
 
       if (response.statusCode == 200 && server != null) {
+        if (!server!.online.value) {
+          server!.swtichStatus();
+        }
         List.of(body['logs']).forEach((element) {
           server!.addLog(element);
         });

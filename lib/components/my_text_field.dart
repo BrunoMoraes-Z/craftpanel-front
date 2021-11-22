@@ -63,6 +63,8 @@ class MyTextField extends StatefulWidget {
 class _MyTextFieldState extends State<MyTextField> {
   late bool visible = false;
 
+  FocusNode myFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -82,7 +84,9 @@ class _MyTextFieldState extends State<MyTextField> {
         maxLength: widget.length,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
+        focusNode: myFocusNode,
         onChanged: widget.onChange,
+        autofocus: true,
         onSubmitted: widget.onSubmit != null
             ? (v) {
                 if (widget.clearOnSubmit) {
@@ -91,6 +95,7 @@ class _MyTextFieldState extends State<MyTextField> {
                   });
                 }
                 widget.onSubmit!(v);
+                myFocusNode.requestFocus();
               }
             : (v) {},
         decoration: InputDecoration(
