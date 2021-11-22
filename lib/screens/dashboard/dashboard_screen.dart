@@ -94,6 +94,7 @@ class DashboardScreen extends StatelessWidget {
                                   GetStorage().remove('list');
                                   GetStorage().remove('permissions');
                                   GetStorage().remove('view');
+                                  GetStorage().remove('view_status');
                                   GetStorage().save();
                                   showToast(
                                     context: context,
