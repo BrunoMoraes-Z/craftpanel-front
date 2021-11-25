@@ -5,6 +5,7 @@ import 'package:craft_panel/components/my_text_field.dart';
 import 'package:craft_panel/constants.dart';
 import 'package:craft_panel/main.dart';
 import 'package:craft_panel/screens/detail/detail_screen.dart';
+import 'package:craft_panel/utilities/permission_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -58,6 +59,34 @@ class _TerminalState extends State<Terminal> {
 
   @override
   Widget build(BuildContext context) {
+    Widget prompt = hasPermission('USE_TERMINAL')
+        ? Container(
+            height: 35,
+            width: double.infinity,
+            child: Elevated(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                child: MyTextField(
+                  'Comando',
+                  onSubmit: (v) async {
+                    if (v.trim().isNotEmpty) {
+                      await api.sendCommand(server!.game.serverId, v);
+                      await api.getServerLog(server!.game.serverId);
+                      _scroll();
+                    }
+                  },
+                  action: TextInputAction.send,
+                  clearOnSubmit: true,
+                  textAlign: TextAlign.left,
+                  length: 1000,
+                  backColor: backgroundColor,
+                  cursorColor: textColor,
+                ),
+              ),
+            ),
+          )
+        : Container();
+
     return Expanded(
       child: Container(
         width: double.infinity,
@@ -69,31 +98,7 @@ class _TerminalState extends State<Terminal> {
         child: Container(
           child: Column(
             children: [
-              Container(
-                height: 35,
-                width: double.infinity,
-                child: Elevated(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    child: MyTextField(
-                      'Comando',
-                      onSubmit: (v) async {
-                        if (v.trim().isNotEmpty) {
-                          await api.sendCommand(server!.game.serverId, v);
-                          await api.getServerLog(server!.game.serverId);
-                          _scroll();
-                        }
-                      },
-                      action: TextInputAction.send,
-                      clearOnSubmit: true,
-                      textAlign: TextAlign.left,
-                      length: 1000,
-                      backColor: backgroundColor,
-                      cursorColor: textColor,
-                    ),
-                  ),
-                ),
-              ),
+              prompt,
               Flexible(
                 child: Container(
                   width: double.infinity,

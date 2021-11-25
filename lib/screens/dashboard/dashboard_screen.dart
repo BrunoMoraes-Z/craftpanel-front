@@ -78,6 +78,7 @@ class DashboardScreen extends StatelessWidget {
                                 onClick: () async {
                                   dashStore.toggle(ScreenType.LIST_SERVERS);
                                   dashStore.setServerName('');
+                                  GetStorage().remove('view_status');
                                 },
                               ),
                               // LateralButton(

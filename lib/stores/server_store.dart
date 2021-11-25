@@ -1,4 +1,3 @@
-import 'package:craft_panel/main.dart';
 import 'package:craft_panel/models/server.dart';
 import 'package:craft_panel/stores/stores.dart';
 import 'package:get_storage/get_storage.dart';
@@ -13,9 +12,6 @@ abstract class _ServerStoreBase with Store {
     _setGame(listServersStore.listServers
         .where((element) => element.serverId == id)
         .first);
-    if (!GetStorage().read('view_status')) {
-      swtichStatus();
-    }
   }
 
   @observable
@@ -51,7 +47,7 @@ abstract class _ServerStoreBase with Store {
   Server get game => gameServer.value!;
 
   @observable
-  var online = Observable<bool>(false);
+  var online = Observable<bool>(GetStorage().read('view_status') as bool);
 
   @action
   void swtichStatus() => online.value = !online.value;

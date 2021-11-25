@@ -29,9 +29,10 @@ class _ListScreenState extends State<ListScreen> {
   @override
   void initState() {
     super.initState();
-    if (listServersStore.listServers.isEmpty) {
-      api.listServers().then((value) => print(value));
-    }
+    // if (listServersStore.listServers.isEmpty) {
+    //   api.listServers().then((value) => print(value));
+    // }
+    api.listServers().then((value) => print(value));
     if (!timer.isActive) {
       Timer.periodic(Duration(seconds: 10), (timer) async {
         await api.listServers();
