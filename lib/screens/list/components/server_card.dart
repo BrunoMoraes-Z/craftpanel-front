@@ -3,6 +3,7 @@ import 'package:craft_panel/constants.dart';
 import 'package:craft_panel/screens/list/components/detail_server_card_item.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ServerCard extends StatefulWidget {
   const ServerCard({
@@ -85,7 +86,10 @@ class _ServerCardState extends State<ServerCard> {
                       children: [
                         DetailServerCardItem(
                           icon: FontAwesomeIcons.networkWired,
-                          text: '192.168.1.107:${widget.serverPort}',
+                          text: GetStorage().read('ip') +
+                              (widget.serverPort != 25565
+                                  ? ':${widget.serverPort}'
+                                  : '           '),
                           selectable: true,
                         ),
                         DetailServerCardItem(

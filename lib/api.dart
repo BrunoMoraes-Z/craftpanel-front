@@ -54,6 +54,7 @@ class Api {
       );
 
       var body = json.decode(response.body);
+      await GetStorage().write('ip', body['ip']);
 
       if ((body['servers'] as List).isNotEmpty) {
         listServersStore.addServers(body);
