@@ -53,28 +53,30 @@ class _ListScreenState extends State<ListScreen> {
   Widget build(BuildContext context) {
     return Container(
       width: widget.width,
-      child: Observer(
-        builder: (_) {
-          return Column(
-            children: listServersStore.servers.map(
-              (element) {
-                return ServerCard(
-                  serverName: element.serverName,
-                  onClick: () async {
-                    dashStore.toggle(ScreenType.DETAIL_SERVER);
-                    dashStore.setServerName(element.serverName);
-                    await GetStorage().write('view', element.serverId);
-                    await GetStorage().write('view_status', element.isOnline);
-                  },
-                  serverPort: element.serverPort,
-                  serverRam: element.maxRam,
-                  version: element.serverVersion,
-                  online: element.isOnline,
-                );
-              },
-            ).toList(),
-          );
-        },
+      child: SingleChildScrollView(
+        child: Observer(
+          builder: (_) {
+            return Column(
+              children: listServersStore.servers.map(
+                (element) {
+                  return ServerCard(
+                    serverName: element.serverName,
+                    onClick: () async {
+                      dashStore.toggle(ScreenType.DETAIL_SERVER);
+                      dashStore.setServerName(element.serverName);
+                      await GetStorage().write('view', element.serverId);
+                      await GetStorage().write('view_status', element.isOnline);
+                    },
+                    serverPort: element.serverPort,
+                    serverRam: element.maxRam,
+                    version: element.serverVersion,
+                    online: element.isOnline,
+                  );
+                },
+              ).toList(),
+            );
+          },
+        ),
       ),
     );
   }
